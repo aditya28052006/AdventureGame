@@ -1,12 +1,12 @@
 import { useState } from "react";
-import { registerUser } from "../api/authApi";
+import { createCharacter } from "../api/characterApi";
 import { useNavigate } from "react-router-dom";
 
-function Register() {
+function CreateCharacter() {
     const [form, setForm] = useState({
         name: "",
+        characterClass: "Warrior",
         email: "",
-        password: "",
     });
 
     const navigate = useNavigate();
@@ -22,30 +22,32 @@ function Register() {
         e.preventDefault();
 
         try {
-        const res = await registerUser(form);
+        const res = await createCharacter(form);
 
-        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("character", JSON.stringify(res.data));
 
-        alert("Registration successful!");
-        navigate("/create-character");
+        alert("Character created!");
+        navigate("/dashboard");
         } catch (err) {
         console.error(err);
-        alert(err.response?.data?.message || "Registration failed");
-    }
+        alert("Character creation failed");
+        }
     };
 
     return (
-        <div className="flex min-h-screen justify-center items-center bg-gray-900">
+        <div className="min-h-screen flex justify-center items-center bg-gray-900">
         <form
             onSubmit={handleSubmit}
             className="bg-gray-800 p-8 rounded-lg shadow-lg w-96"
         >
-            <h1 className="text-white text-2xl mb-6 text-center">Register</h1>
+            <h1 className="text-white text-2xl mb-6 text-center">
+            Create Character
+            </h1>
 
             <input
             type="text"
             name="name"
-            placeholder="Name"
+            placeholder="Character Name"
             onChange={handleChange}
             className="w-full p-3 mb-4 rounded"
             />
@@ -53,28 +55,30 @@ function Register() {
             <input
             type="email"
             name="email"
-            placeholder="Email"
+            placeholder="Your Email"
             onChange={handleChange}
             className="w-full p-3 mb-4 rounded"
             />
 
-            <input
-            type="password"
-            name="password"
-            placeholder="Password"
+            <select
+            name="characterClass"
             onChange={handleChange}
             className="w-full p-3 mb-4 rounded"
-            />
+            >
+            <option value="Warrior">Warrior ⚔️</option>
+            <option value="Mage">Mage 🔮</option>
+            <option value="Rogue">Rogue 🗡️</option>
+            </select>
 
             <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-3 rounded"
+            className="w-full bg-purple-500 text-white p-3 rounded"
             >
-            Register
+            Create Character
             </button>
         </form>
         </div>
     );
 }
 
-export default Register;
+export default CreateCharacter;

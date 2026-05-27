@@ -26,7 +26,7 @@ function Login() {
         localStorage.setItem("token", res.data.token);
 
         alert("Login successful!");
-        navigate("/dashboard");
+        navigate("/create-character");
         } catch (err) {
         alert("Login failed");
         console.error(err);
