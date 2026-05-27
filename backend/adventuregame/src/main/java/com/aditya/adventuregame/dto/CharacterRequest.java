@@ -14,5 +14,6 @@ public class CharacterRequest {
 
     private String name;
     private String characterClass;
+    private String email;
 
 }
