@@ -3,6 +3,7 @@ import Register from "./pages/Register";
 import Login from "./pages/Login";
 import CreateCharacter from "./pages/CreateCharacter";
 import ProtectedRoute from "./components/ProtectedRoute";
+import Battle from "./pages/Battle";
 
 function Dashboard() {
   const character = JSON.parse(localStorage.getItem("character"));
@@ -55,6 +56,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+
+        <Route path="/battle" element={<Battle />} />
       </Routes>
     </BrowserRouter>
   );
