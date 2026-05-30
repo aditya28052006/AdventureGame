@@ -107,7 +107,23 @@ public class BattleService {
         String message;
         if(victory){
             battle.setFinished(true);
+            character.setXp(
+                    character.getXp()+monster.getXpReward()
+            );
+
             message="Victory! You defeated "+ monster.getName();
+            if(character.getXp()>=100){
+                character.setLevel(character.getLevel()+1);
+                character.setXp(character.getXp()-100);
+                character.setAttack(character.getAttack()+5);
+                character.setHealth(character.getHealth()+20);
+                character.setDefense(character.getDefense()+3);
+                message+="Level Up! "+character.getName()+" is now level "+character.getLevel();
+            }
+
+
+            characterRepository.save(character);
+
         }
         else{
             int newPlayerHealth= battle.getPlayerHealth()-monster.getAttack();

@@ -52,6 +52,7 @@ public class CharacterService {
                 .name(request.getName())
                 .characterClass(request.getCharacterClass())
                 .level(1)
+                .xp(0)
                 .health(health)
                 .attack(attack)
                 .defense(defense)

@@ -19,7 +19,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/**",
                                 "/api/characters/**",
-                                "api/battle/**")
+                                "/api/battle/**")
                         .permitAll()
                         .anyRequest().authenticated()
                 )

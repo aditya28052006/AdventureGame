@@ -24,6 +24,9 @@ public class GameCharacter {
     private int attack;
     private int defense;
 
+    @Column(nullable = false)
+    private int xp;
+
     @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
