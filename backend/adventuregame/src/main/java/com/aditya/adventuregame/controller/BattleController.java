@@ -24,4 +24,9 @@ public class BattleController {
     public StartBattleResponse startBattle(@RequestBody BattleRequest request){
         return battleService.startBattle(request);
     }
+
+    @PostMapping("/attack/{battleId}")
+    public BattleResponse attack(@PathVariable Long battleId){
+        return battleService.attack(battleId);
+    }
 }

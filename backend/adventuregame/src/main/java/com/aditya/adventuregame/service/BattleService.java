@@ -83,4 +83,54 @@ public class BattleService {
                 "Battle Started!"
         );
     }
+
+
+    public BattleResponse attack(Long battleId){
+        Battle battle=battleRepository.findById(battleId)
+                .orElseThrow(()-> new RuntimeException("Battle Not Found!"));
+
+        if(battle.isFinished()){
+            throw new RuntimeException("Battle already finished!");
+        }
+
+        GameCharacter character=battle.getGameCharacter();
+        Monster monster=battle.getMonster();
+
+        int newMonsterHealth= battle.getMonsterHealth()-character.getAttack();
+        if(newMonsterHealth<0){
+            newMonsterHealth=0;
+        }
+        battle.setMonsterHealth(newMonsterHealth);
+
+        boolean victory =newMonsterHealth==0;
+
+        String message;
+        if(victory){
+            battle.setFinished(true);
+            message="Victory! You defeated "+ monster.getName();
+        }
+        else{
+            int newPlayerHealth= battle.getPlayerHealth()-monster.getAttack();
+
+            if(newPlayerHealth<0){
+                newPlayerHealth=0;
+            }
+            battle.setPlayerHealth(newPlayerHealth);
+            if(newPlayerHealth==0){
+                battle.setFinished(true);
+                message="Defeat! "+monster.getName()+" defeated you!!";
+            }
+            else {
+                message = "You hit " + monster.getName() + " for " + character.getAttack() + " damage.";
+            }
+
+        }
+        battleRepository.save(battle);
+        return new BattleResponse(
+                battle.getPlayerHealth(),
+                battle.getMonsterHealth(),
+                message,
+                victory
+        );
+    }
 }
