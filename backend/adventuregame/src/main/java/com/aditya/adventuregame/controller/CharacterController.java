@@ -18,4 +18,9 @@ public class CharacterController {
     public CharacterResponse createCharacter(@RequestBody CharacterRequest request){
         return characterService.createCharacter(request);
     }
+
+    @GetMapping("/{name}")
+    public CharacterResponse getCharacter(@PathVariable String name){
+        return characterService.getCharacter(name);
+    }
 }

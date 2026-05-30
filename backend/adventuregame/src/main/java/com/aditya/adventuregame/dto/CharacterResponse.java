@@ -12,6 +12,7 @@ public class CharacterResponse {
     private String name;
     private String characterClass;
     private int level;
+    private int xp;
     private int health;
     private int attack;
     private int defense;

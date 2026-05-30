@@ -65,6 +65,24 @@ public class CharacterService {
                 character.getName(),
                 character.getCharacterClass(),
                 character.getLevel(),
+                character.getXp(),
+                character.getHealth(),
+                character.getAttack(),
+                character.getDefense()
+        );
+
+    }
+
+    public CharacterResponse getCharacter(String name){
+        GameCharacter character=characterRepository
+                .findByName(name)
+                .orElseThrow(()-> new RuntimeException("Character not found"));
+
+        return new CharacterResponse(
+                character.getName(),
+                character.getCharacterClass(),
+                character.getLevel(),
+                character.getXp(),
                 character.getHealth(),
                 character.getAttack(),
                 character.getDefense()
