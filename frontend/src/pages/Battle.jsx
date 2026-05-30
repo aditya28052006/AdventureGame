@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { startBattle, attack } from "../api/battleApi";
+import {getCharacter} from "../api/characterApi";
+import { useEffect } from "react";
 
 function Battle() {
 
@@ -13,6 +15,24 @@ function Battle() {
     const [message, setMessage] = useState("");
 
     const [victory, setVictory] = useState(false);
+
+    const [character, setCharacter] = useState(null);
+
+    useEffect(() => {
+        loadCharacter();
+    }, []);
+
+
+
+    const loadCharacter = async () => {
+
+        try{
+            const response =await getCharacter("ShadowHunter");
+            setCharacter(response.data);
+        }catch(error){
+            console.error(error);
+        }
+    };
 
 
     const handleStartBattle = async () => {
@@ -47,6 +67,9 @@ function Battle() {
             setMonsterHealth(response.data.monsterHealth);
             setMessage(response.data.message);
             setVictory(response.data.victory);
+            if(response.data.victory){
+                loadCharacter();
+            }
 
         } catch (error) {
             console.error(error);
@@ -60,6 +83,32 @@ function Battle() {
                 marginTop: "50px"
             }}
         >
+            {character && (
+
+                <div
+                    style={{
+                        border: "1px solid gray",
+                        padding: "15px",
+                        marginBottom: "20px"
+                    }}
+                >
+
+                    <h2>⚔️ {character.name}</h2>
+
+                    <p>Class: {character.characterClass}</p>
+
+                    <p>Level: {character.level}</p>
+
+                    <p>XP: {character.xp}</p>
+
+                    <p>Attack: {character.attack}</p>
+
+                    <p>Defense: {character.defense}</p>
+
+                    <p>Health: {character.health}</p>
+
+                </div>
+            )}
             <h1>⚔️ Battle Arena ⚔️</h1>
 
             <button onClick={handleStartBattle}>
