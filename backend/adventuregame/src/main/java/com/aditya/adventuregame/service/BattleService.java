@@ -4,12 +4,8 @@ package com.aditya.adventuregame.service;
 import com.aditya.adventuregame.dto.BattleRequest;
 import com.aditya.adventuregame.dto.BattleResponse;
 import com.aditya.adventuregame.dto.StartBattleResponse;
-import com.aditya.adventuregame.entity.Battle;
-import com.aditya.adventuregame.entity.GameCharacter;
-import com.aditya.adventuregame.entity.Monster;
-import com.aditya.adventuregame.repository.BattleRepository;
-import com.aditya.adventuregame.repository.CharacterRepository;
-import com.aditya.adventuregame.repository.MonsterRepository;
+import com.aditya.adventuregame.entity.*;
+import com.aditya.adventuregame.repository.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +16,8 @@ public class BattleService {
     private final CharacterRepository characterRepository;
     private final MonsterRepository monsterRepository;
     private final BattleRepository battleRepository;
+    private final ItemRepository itemRepository;
+    private final InventoryRepository inventoryRepository;
 
     public BattleResponse fight(BattleRequest request){
         GameCharacter character=characterRepository
@@ -111,14 +109,36 @@ public class BattleService {
                     character.getXp()+monster.getXpReward()
             );
 
-            message="Victory! You defeated "+ monster.getName();
+            Item potion=itemRepository.findByName("Health Potion")
+                    .orElseThrow(()-> new RuntimeException("Potion not found."));
+
+            InventoryItem inventoryItem=inventoryRepository.findByGameCharacterAndItem(
+                    character,potion
+            ).orElse(null);
+
+            if(inventoryItem==null){
+                inventoryItem=InventoryItem.builder()
+                        .gameCharacter(character)
+                        .item(potion)
+                        .quantity(1)
+                        .build();
+            }else{
+                inventoryItem.setQuantity(
+                        inventoryItem.getQuantity()+1
+                );
+            }
+
+            inventoryRepository.save(inventoryItem);
+
+
+            message="Victory! You defeated "+ monster.getName()+" and found a Health Potion!";
             if(character.getXp()>=100){
                 character.setLevel(character.getLevel()+1);
                 character.setXp(character.getXp()-100);
                 character.setAttack(character.getAttack()+5);
                 character.setHealth(character.getHealth()+20);
                 character.setDefense(character.getDefense()+3);
-                message+="Level Up! "+character.getName()+" is now level "+character.getLevel();
+                message+=" Level Up! "+character.getName()+" is now level "+character.getLevel();
             }
 
 
