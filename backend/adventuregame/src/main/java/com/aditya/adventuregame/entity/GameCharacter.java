@@ -28,6 +28,14 @@ public class GameCharacter {
     private int xp;
 
     @ManyToOne
+    @JoinColumn(name = "equipped_weapon_id")
+    private Item equippedWeapon;
+
+    @ManyToOne
+    @JoinColumn(name = "equipped_armor_id")
+    private Item equippedArmor;
+
+    @ManyToOne
     @JoinColumn(name="user_id")
     private User user;
 }

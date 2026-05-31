@@ -1,10 +1,12 @@
 package com.aditya.adventuregame.service;
 
+import com.aditya.adventuregame.dto.EquipResponse;
 import com.aditya.adventuregame.dto.InventoryResponse;
 import com.aditya.adventuregame.dto.UsePotionResponse;
 import com.aditya.adventuregame.entity.GameCharacter;
 import com.aditya.adventuregame.entity.InventoryItem;
 import com.aditya.adventuregame.entity.Item;
+import com.aditya.adventuregame.entity.ItemType;
 import com.aditya.adventuregame.repository.CharacterRepository;
 import com.aditya.adventuregame.repository.InventoryRepository;
 import com.aditya.adventuregame.repository.ItemRepository;
@@ -60,6 +62,37 @@ public class InventoryService {
                 character.getHealth(),
                 inventoryItem.getQuantity(),
                 "Potion used!!"
+        );
+    }
+
+    public EquipResponse equipItem(Long characterId,Long itemId){
+        GameCharacter character=characterRepository.findById(characterId)
+                .orElseThrow(()->new RuntimeException("Character not found"));
+
+        Item item=itemRepository.findById(itemId)
+                .orElseThrow(()-> new RuntimeException("Item Not Found!!"));
+
+        if(item.getItemType()== ItemType.WEAPON){
+            character.setEquippedWeapon(item);
+            character.setAttack(
+                    character.getAttack()+item.getValue()
+            );
+        }
+        else if(item.getItemType()==ItemType.ARMOR){
+            character.setEquippedArmor(item);
+            character.setDefense(
+                    character.getDefense()+item.getValue()
+            );
+        }
+        else{
+            throw new RuntimeException("Potions can not be equipped!!");
+        }
+        characterRepository.save(character);
+
+        return new EquipResponse(
+                item.getName()+" equipped!",
+                character.getAttack(),
+                character.getDefense()
         );
     }
 }

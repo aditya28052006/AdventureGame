@@ -1,6 +1,7 @@
 package com.aditya.adventuregame.controller;
 
 
+import com.aditya.adventuregame.dto.EquipResponse;
 import com.aditya.adventuregame.dto.InventoryResponse;
 import com.aditya.adventuregame.dto.UsePotionResponse;
 import com.aditya.adventuregame.entity.InventoryItem;
@@ -25,5 +26,10 @@ public class InventoryController {
     @PostMapping("/use-potion/{characterId}")
     public UsePotionResponse usePotion(@PathVariable Long characterId){
         return inventoryService.usePotion(characterId);
+    }
+
+    @PostMapping("/equip/{characterId}/{itemId}")
+    public EquipResponse equipItem(@PathVariable Long characterId, @PathVariable Long itemId){
+        return inventoryService.equipItem(characterId,itemId);
     }
 }
