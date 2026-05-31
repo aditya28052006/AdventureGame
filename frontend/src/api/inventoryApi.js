@@ -4,3 +4,4 @@ const API = axios.create({
 });
 
 export const getInventory = (characterId) => API.get(`/${characterId}`);
+export const usePotion = (characterId) => API.post(`/use-potion/${characterId}`);

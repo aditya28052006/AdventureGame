@@ -3,6 +3,7 @@ import { startBattle, attack } from "../api/battleApi";
 import {getCharacter} from "../api/characterApi";
 import { useEffect } from "react";
 import { getInventory } from "../api/inventoryApi";
+import {usePotion} from "../api/inventoryApi";
 
 function Battle() {
 
@@ -90,6 +91,17 @@ function Battle() {
         }
     };
 
+    const handleUsePotion = async () => {
+        try {
+            const response = await usePotion(1);
+            setMessage(response.data.message);
+            loadCharacter();
+            loadInventory();
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
     return (
         <div
             style={{
@@ -132,6 +144,15 @@ function Battle() {
             >
 
                 <h2>🎒 Inventory</h2>
+                {inventory.some(
+                    item =>
+                        item.itemName === "Health Potion"
+                        && item.quantity > 0
+                ) && (
+                    <button onClick={handleUsePotion}>
+                        Use Potion 🧪
+                    </button>
+                )}
 
                 {inventory.map((item, index) => (
 
