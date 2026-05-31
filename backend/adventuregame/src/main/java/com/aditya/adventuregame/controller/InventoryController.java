@@ -1,0 +1,23 @@
+package com.aditya.adventuregame.controller;
+
+
+import com.aditya.adventuregame.dto.InventoryResponse;
+import com.aditya.adventuregame.entity.InventoryItem;
+import com.aditya.adventuregame.service.InventoryService;
+import lombok.RequiredArgsConstructor;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+@RestController
+@RequestMapping("/api/inventory")
+@RequiredArgsConstructor
+@CrossOrigin("*")
+public class InventoryController {
+    private final InventoryService inventoryService;
+
+    @GetMapping("/{characterId}")
+    public List<InventoryResponse> getInventory(@PathVariable Long characterId){
+        return inventoryService.getInventory(characterId);
+    }
+}
