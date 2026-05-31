@@ -2,6 +2,7 @@ import { useState } from "react";
 import { startBattle, attack } from "../api/battleApi";
 import {getCharacter} from "../api/characterApi";
 import { useEffect } from "react";
+import { getInventory } from "../api/inventoryApi";
 
 function Battle() {
 
@@ -18,8 +19,11 @@ function Battle() {
 
     const [character, setCharacter] = useState(null);
 
+    const [inventory, setInventory] = useState([]);
+
     useEffect(() => {
         loadCharacter();
+        loadInventory();
     }, []);
 
 
@@ -69,8 +73,18 @@ function Battle() {
             setVictory(response.data.victory);
             if(response.data.victory){
                 loadCharacter();
+                loadInventory();
             }
 
+        } catch (error) {
+            console.error(error);
+        }
+    };
+
+    const loadInventory = async () => {
+        try {
+            const response = await getInventory(1);
+            setInventory(response.data);
         } catch (error) {
             console.error(error);
         }
@@ -109,6 +123,25 @@ function Battle() {
 
                 </div>
             )}
+            <div
+                style={{
+                    border: "1px solid gray",
+                    padding: "15px",
+                    marginBottom: "20px"
+                }}
+            >
+
+                <h2>🎒 Inventory</h2>
+
+                {inventory.map((item, index) => (
+
+                    <p key={index}>
+                        {item.itemName} x{item.quantity}
+                    </p>
+
+                ))}
+
+            </div>
             <h1>⚔️ Battle Arena ⚔️</h1>
 
             <button onClick={handleStartBattle}>
