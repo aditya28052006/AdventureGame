@@ -2,6 +2,7 @@ package com.aditya.adventuregame.controller;
 
 
 import com.aditya.adventuregame.dto.InventoryResponse;
+import com.aditya.adventuregame.dto.UsePotionResponse;
 import com.aditya.adventuregame.entity.InventoryItem;
 import com.aditya.adventuregame.service.InventoryService;
 import lombok.RequiredArgsConstructor;
@@ -19,5 +20,10 @@ public class InventoryController {
     @GetMapping("/{characterId}")
     public List<InventoryResponse> getInventory(@PathVariable Long characterId){
         return inventoryService.getInventory(characterId);
+    }
+
+    @PostMapping("/use-potion/{characterId}")
+    public UsePotionResponse usePotion(@PathVariable Long characterId){
+        return inventoryService.usePotion(characterId);
     }
 }
