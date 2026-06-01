@@ -52,7 +52,12 @@ public class InventoryService {
             throw new RuntimeException("No potions available");
         }
 
-        character.setHealth(character.getHealth()+potion.getValue());
+        character.setCurrentHealth(
+                Math.min(
+                        character.getCurrentHealth()+potion.getValue()
+                        ,character.getMaxHealth()
+                )
+        );
 
         inventoryItem.setQuantity(inventoryItem.getQuantity()-1);
 
@@ -60,7 +65,7 @@ public class InventoryService {
         inventoryRepository.save(inventoryItem);
 
         return new UsePotionResponse(
-                character.getHealth(),
+                character.getCurrentHealth(),
                 inventoryItem.getQuantity(),
                 "Potion used!!"
         );

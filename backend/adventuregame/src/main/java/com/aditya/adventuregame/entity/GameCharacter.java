@@ -20,7 +20,8 @@ public class GameCharacter {
     private String name;
     private String characterClass;
     private int level;
-    private int health;
+    private int maxHealth;
+    private int currentHealth;
     private int attack;
     private int defense;
 

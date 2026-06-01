@@ -13,7 +13,8 @@ public class CharacterResponse {
     private String characterClass;
     private int level;
     private int xp;
-    private int health;
+    private int maxHealth;
+    private int currentHealth;
     private int attack;
     private int defense;
     private String equippedWeapon;

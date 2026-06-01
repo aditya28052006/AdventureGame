@@ -33,7 +33,7 @@ public class BattleService {
             newMonsterHp=0;
         }
 
-        int newPlayerHp=character.getHealth()-monster.getAttack();
+        int newPlayerHp=character.getCurrentHealth()-monster.getAttack();
         if(newPlayerHp<0){
             newPlayerHp=0;
         }
@@ -65,7 +65,7 @@ public class BattleService {
                 .orElseThrow(()-> new RuntimeException("Monster not found"));
 
         Battle battle=Battle.builder()
-                .playerHealth(character.getHealth())
+                .playerHealth(character.getCurrentHealth())
                 .monsterHealth(monster.getHealth())
                 .finished(false)
                 .gameCharacter(character)
@@ -161,7 +161,7 @@ public class BattleService {
                 character.setLevel(character.getLevel()+1);
                 character.setXp(character.getXp()-100);
                 character.setAttack(character.getAttack()+5);
-                character.setHealth(character.getHealth()+20);
+                character.setMaxHealth(character.getMaxHealth()+20);
                 character.setDefense(character.getDefense()+3);
                 message+=" Level Up! "+character.getName()+" is now level "+character.getLevel();
             }

@@ -53,7 +53,8 @@ public class CharacterService {
                 .characterClass(request.getCharacterClass())
                 .level(1)
                 .xp(0)
-                .health(health)
+                .maxHealth(health)
+                .currentHealth(health)
                 .attack(attack)
                 .defense(defense)
                 .user(user)
@@ -66,7 +67,8 @@ public class CharacterService {
                 character.getCharacterClass(),
                 character.getLevel(),
                 character.getXp(),
-                character.getHealth(),
+                character.getMaxHealth(),
+                character.getCurrentHealth(),
                 character.getAttack(),
                 character.getDefense(),
                 character.getEquippedWeapon() != null
@@ -89,7 +91,8 @@ public class CharacterService {
                 character.getCharacterClass(),
                 character.getLevel(),
                 character.getXp(),
-                character.getHealth(),
+                character.getMaxHealth(),
+                character.getCurrentHealth(),
                 character.getAttack(),
                 character.getDefense(),
                 character.getEquippedWeapon() != null
