@@ -73,13 +73,33 @@ public class InventoryService {
         Item item=itemRepository.findById(itemId)
                 .orElseThrow(()-> new RuntimeException("Item Not Found!!"));
 
+        InventoryItem inventoryItem=inventoryRepository.
+                findByGameCharacterAndItem(
+                        character,item
+                ).orElseThrow(()-> new RuntimeException("You dont own this item"));
+
         if(item.getItemType()== ItemType.WEAPON){
+
+            if(character.getEquippedWeapon()!=null){
+                character.setAttack(
+                        character.getAttack()-character.getEquippedWeapon().getValue()
+                );
+
+            }
+
             character.setEquippedWeapon(item);
             character.setAttack(
                     character.getAttack()+item.getValue()
             );
         }
         else if(item.getItemType()==ItemType.ARMOR){
+
+            if(character.getEquippedArmor()!=null){
+                character.setDefense(
+                        character.getDefense()-character.getEquippedArmor().getValue()
+                );
+            }
+
             character.setEquippedArmor(item);
             character.setDefense(
                     character.getDefense()+item.getValue()
