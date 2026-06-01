@@ -68,7 +68,13 @@ public class CharacterService {
                 character.getXp(),
                 character.getHealth(),
                 character.getAttack(),
-                character.getDefense()
+                character.getDefense(),
+                character.getEquippedWeapon() != null
+                        ? character.getEquippedWeapon().getName()
+                        : "None",
+                character.getEquippedArmor() != null
+                        ? character.getEquippedArmor().getName()
+                        : "None"
         );
 
     }
@@ -85,7 +91,13 @@ public class CharacterService {
                 character.getXp(),
                 character.getHealth(),
                 character.getAttack(),
-                character.getDefense()
+                character.getDefense(),
+                character.getEquippedWeapon() != null
+                        ? character.getEquippedWeapon().getName()
+                        : "None",
+                character.getEquippedArmor() != null
+                        ? character.getEquippedArmor().getName()
+                        : "None"
         );
     }
 }

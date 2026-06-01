@@ -109,17 +109,42 @@ public class BattleService {
                     character.getXp()+monster.getXpReward()
             );
 
-            Item potion=itemRepository.findByName("Health Potion")
-                    .orElseThrow(()-> new RuntimeException("Potion not found."));
+            Item lootItem;
+            switch(monster.getName()){
+                case "Goblin":
+                    lootItem=itemRepository.findByName("Health Potion").orElseThrow();
+                    break;
+                case "Skeleton":
+                    lootItem = itemRepository
+                            .findByName("Iron Sword")
+                            .orElseThrow();
+                    break;
 
+                case "Orc":
+                    lootItem = itemRepository
+                            .findByName("Steel Armor")
+                            .orElseThrow();
+                    break;
+
+                case "Dragon":
+                    lootItem = itemRepository
+                            .findByName("Steel Armor")
+                            .orElseThrow();
+                    break;
+
+                default:
+                    lootItem = itemRepository
+                            .findByName("Health Potion")
+                            .orElseThrow();
+            }
             InventoryItem inventoryItem=inventoryRepository.findByGameCharacterAndItem(
-                    character,potion
+                    character,lootItem
             ).orElse(null);
 
             if(inventoryItem==null){
                 inventoryItem=InventoryItem.builder()
                         .gameCharacter(character)
-                        .item(potion)
+                        .item(lootItem)
                         .quantity(1)
                         .build();
             }else{
@@ -131,7 +156,7 @@ public class BattleService {
             inventoryRepository.save(inventoryItem);
 
 
-            message="Victory! You defeated "+ monster.getName()+" and found a Health Potion!";
+            message="Victory! You defeated "+ monster.getName()+" and found a "+lootItem.getName()+"!";
             if(character.getXp()>=100){
                 character.setLevel(character.getLevel()+1);
                 character.setXp(character.getXp()-100);

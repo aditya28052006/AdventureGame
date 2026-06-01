@@ -16,4 +16,6 @@ public class CharacterResponse {
     private int health;
     private int attack;
     private int defense;
+    private String equippedWeapon;
+    private String equippedArmor;
 }

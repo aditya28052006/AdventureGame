@@ -3,7 +3,7 @@ import { startBattle, attack } from "../api/battleApi";
 import {getCharacter} from "../api/characterApi";
 import { useEffect } from "react";
 import { getInventory } from "../api/inventoryApi";
-import {usePotion} from "../api/inventoryApi";
+import {usePotion,equipItem} from "../api/inventoryApi";
 
 function Battle() {
 
@@ -21,6 +21,9 @@ function Battle() {
     const [character, setCharacter] = useState(null);
 
     const [inventory, setInventory] = useState([]);
+
+    const [selectedMonster, setSelectedMonster] =
+    useState("Goblin");
 
     useEffect(() => {
         loadCharacter();
@@ -46,7 +49,7 @@ function Battle() {
 
             const response = await startBattle({
                 characterName: "ShadowHunter",
-                monsterName: "Goblin"
+                monsterName: selectedMonster
             });
 
             setBattleId(response.data.battleId);
@@ -102,6 +105,17 @@ function Battle() {
         }
     };
 
+
+    const handleEquipItem = async (itemId) => {
+        try {
+            const response = await equipItem(1, itemId);
+            setMessage(response.data.message);
+            loadCharacter();
+        } catch (error) {
+            console.error(error);
+        } 
+    };  
+
     return (
         <div
             style={{
@@ -131,6 +145,18 @@ function Battle() {
 
                     <p>Defense: {character.defense}</p>
 
+                    <p>
+                        ⚔️ Equipped Weapon:
+                        {" "}
+                        {character.equippedWeapon}
+                    </p>
+
+                    <p>
+                        🛡️ Equipped Armor:
+                        {" "}
+                        {character.equippedArmor}
+                    </p>
+
                     <p>Health: {character.health}</p>
 
                 </div>
@@ -156,15 +182,50 @@ function Battle() {
 
                 {inventory.map((item, index) => (
 
-                    <p key={index}>
-                        {item.itemName} x{item.quantity}
-                    </p>
+                    <div key={index}>
+
+                        <p>
+                            {item.itemName} x{item.quantity}
+                        </p>
+
+                        {(item.itemType === "WEAPON" ||
+                            item.itemType === "ARMOR") && (
+
+                                <button
+                                    onClick={() =>
+                                        handleEquip(item.itemId)
+                                    }
+                                >
+                                    Equip
+                                </button>
+
+                        )}
+
+                    </div>
 
                 ))}
 
             </div>
             <h1>⚔️ Battle Arena ⚔️</h1>
+            <select
+                value={selectedMonster}
+                onChange={(e) =>
+                    setSelectedMonster(e.target.value)
+                }
+            >
+                <option value="Goblin">Goblin</option>
+                <option value="Skeleton">Skeleton</option>
+                <option value="Orc">Orc</option>
+                <option value="Dragon">Dragon</option>
+            </select>
 
+            <br />
+            <br />
+            <h3>
+                Selected Monster:
+                {" "}
+                {selectedMonster}
+            </h3>
             <button onClick={handleStartBattle}>
                 Start Battle
             </button>

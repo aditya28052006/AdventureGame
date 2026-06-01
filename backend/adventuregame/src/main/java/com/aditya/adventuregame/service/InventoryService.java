@@ -28,6 +28,7 @@ public class InventoryService {
         return items.stream()
                 .map(
                         item->new InventoryResponse(
+                                item.getItem().getId(),
                                 item.getItem().getName(),
                                 item.getItem().getItemType().name(),
                                 item.getQuantity()
