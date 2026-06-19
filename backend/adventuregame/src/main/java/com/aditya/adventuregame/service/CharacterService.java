@@ -18,8 +18,13 @@ public class CharacterService {
 
     public CharacterResponse createCharacter(CharacterRequest request) {
 
+
         User user = userRepository.findByEmail(request.getEmail())
                 .orElseThrow(() -> new RuntimeException("User not found"));
+
+        if(characterRepository.findByUser(user).isPresent()){
+            throw new RuntimeException("User already has a character");
+        }
 
         int health = 0;
         int attack = 0;
@@ -85,6 +90,40 @@ public class CharacterService {
         GameCharacter character=characterRepository
                 .findByName(name)
                 .orElseThrow(()-> new RuntimeException("Character not found"));
+
+        return new CharacterResponse(
+                character.getName(),
+                character.getCharacterClass(),
+                character.getLevel(),
+                character.getXp(),
+                character.getMaxHealth(),
+                character.getCurrentHealth(),
+                character.getAttack(),
+                character.getDefense(),
+                character.getEquippedWeapon() != null
+                        ? character.getEquippedWeapon().getName()
+                        : "None",
+                character.getEquippedArmor() != null
+                        ? character.getEquippedArmor().getName()
+                        : "None"
+        );
+    }
+
+    public GameCharacter getCharacterForUser(String email){
+        User user=userRepository.findByEmail(email)
+                .orElseThrow();
+
+        return characterRepository.findByUser(user).orElseThrow();
+    }
+
+    public CharacterResponse getMyCharacter(String email){
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        GameCharacter character = characterRepository
+                .findByUser(user)
+                .orElseThrow(() -> new RuntimeException("Character not found"));
 
         return new CharacterResponse(
                 character.getName(),

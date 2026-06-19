@@ -36,7 +36,7 @@ public class GameCharacter {
     @JoinColumn(name = "equipped_armor_id")
     private Item equippedArmor;
 
-    @ManyToOne
+    @OneToOne
     @JoinColumn(name="user_id")
     private User user;
 }

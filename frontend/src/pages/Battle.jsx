@@ -1,9 +1,7 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { startBattle, attack } from "../api/battleApi";
-import {getCharacter} from "../api/characterApi";
-import { useEffect } from "react";
-import { getInventory } from "../api/inventoryApi";
-import {usePotion,equipItem} from "../api/inventoryApi";
+import { getCharacter } from "../api/characterApi";
+import { getInventory, usePotion, equipItem } from "../api/inventoryApi";
 import warriorImg from "../assets/warrior.png";
 import mageImg from "../assets/mage.png";
 import rogueImg from "../assets/rogue.png";
@@ -12,426 +10,257 @@ import skeletonImg from "../assets/skeleton.png";
 import orcImg from "../assets/orc.png";
 import dragonImg from "../assets/dragon.png";
 import backgroundImg from "../assets/background.png";
-
+import "../styles/Battle.css";
 
 function Battle() {
-
     const [battleId, setBattleId] = useState(null);
-
     const [playerHealth, setPlayerHealth] = useState(0);
     const [monsterHealth, setMonsterHealth] = useState(0);
     const [maxPlayerHealth, setMaxPlayerHealth] = useState(0);
     const [maxMonsterHealth, setMaxMonsterHealth] = useState(0);
-
     const [message, setMessage] = useState("");
     const [battleLog, setBattleLog] = useState([]);
-
     const [victory, setVictory] = useState(false);
-
     const [character, setCharacter] = useState(null);
-
     const [inventory, setInventory] = useState([]);
+    const [selectedMonster, setSelectedMonster] = useState("Goblin");
 
-    const [selectedMonster, setSelectedMonster] =
-    useState("Goblin");
-
-    useEffect(() => {
-        loadCharacter();
-        loadInventory();
-    }, []);
-
-
-
+    useEffect(() => { loadCharacter(); loadInventory(); }, []);
 
     const loadCharacter = async () => {
-
-        try{
-            const response =await getCharacter("ShadowHunter");
-            setCharacter(response.data);
-        }catch(error){
-            console.error(error);
-        }
+        try { const r = await getCharacter("ShadowHunter"); setCharacter(r.data); }
+        catch(e) { console.error(e); }
     };
 
-
     const handleStartBattle = async () => {
-
         try {
-
-            const response = await startBattle({
-                characterName: "ShadowHunter",
-                monsterName: selectedMonster
-            });
-
-            setBattleId(response.data.battleId);
-            setPlayerHealth(response.data.playerHealth);
-            setMonsterHealth(response.data.monsterHealth);
+            const r = await startBattle({ characterName: "ShadowHunter", monsterName: selectedMonster });
+            setBattleId(r.data.battleId);
+            setPlayerHealth(r.data.playerHealth);
+            setMonsterHealth(r.data.monsterHealth);
             setMaxPlayerHealth(character.maxHealth);
-            setMaxMonsterHealth(response.data.monsterHealth);
-            setMessage(response.data.message);
-            setBattleLog([response.data.message]);
+            setMaxMonsterHealth(r.data.monsterHealth);
+            setMessage(r.data.message);
+            setBattleLog([r.data.message]);
             setVictory(false);
-
-        } catch (error) {
-            console.error(error);
-        }
+        } catch(e) { console.error(e); }
     };
 
     const handleAttack = async () => {
-
         try {
-
-            const response = await attack(battleId);
-
-            setPlayerHealth(response.data.playerHealth);
-            setMonsterHealth(response.data.monsterHealth);
-            setMessage(response.data.message);
-            setBattleLog(prev => [...prev, response.data.message]);
-            setVictory(response.data.victory);
-            if(response.data.victory){
-                loadCharacter();
-                loadInventory();
-            }
-
-        } catch (error) {
-            console.error(error);
-        }
+            const r = await attack(battleId);
+            setPlayerHealth(r.data.playerHealth);
+            setMonsterHealth(r.data.monsterHealth);
+            setMessage(r.data.message);
+            setBattleLog(prev => [...prev, r.data.message]);
+            setVictory(r.data.victory);
+            if (r.data.victory) { loadCharacter(); loadInventory(); }
+        } catch(e) { console.error(e); }
     };
 
     const loadInventory = async () => {
-        try {
-            const response = await getInventory(1);
-            setInventory(response.data);
-        } catch (error) {
-            console.error(error);
-        }
+        try { const r = await getInventory(1); setInventory(r.data); }
+        catch(e) { console.error(e); }
     };
 
     const handleUsePotion = async () => {
         try {
-            const response = await usePotion(1);
-            setMessage(response.data.message);
-            setBattleLog(prev => [...prev, response.data.message]);
-            loadCharacter();
-            loadInventory();
-        } catch (error) {
-            console.error(error);
-        }
+            const r = await usePotion(1);
+            setMessage(r.data.message);
+            setBattleLog(prev => [...prev, r.data.message]);
+            loadCharacter(); loadInventory();
+        } catch(e) { console.error(e); }
     };
-
 
     const handleEquipItem = async (itemId) => {
         try {
-            const response = await equipItem(1, itemId);
-            setMessage(response.data.message);
-            setBattleLog(prev => [...prev, response.data.message]);
+            const r = await equipItem(1, itemId);
+            setMessage(r.data.message);
+            setBattleLog(prev => [...prev, r.data.message]);
             loadCharacter();
-        } catch (error) {
-            console.error(error);
-        } 
-    };  
-
-
-    const cardStyle = {
-        ackgroundColor: "rgba(0, 0, 0, 0.7)",
-        color: "white",
-        border: "1px solid rgba(255,255,255,0.2)",
-        borderRadius: "15px",
-        padding: "20px",
-        marginBottom: "20px",
-        backdropFilter: "blur(5px)"
+        } catch(e) { console.error(e); }
     };
 
     const getCharacterImage = () => {
-
-        if (!character) return null;
-
-        switch(character.characterClass){
-
-            case "Warrior":
-                return warriorImg;
-
-            case "Mage":
-                return mageImg;
-
-            case "Rogue":
-                return rogueImg;
-
-            default:
-                return warriorImg;
+        if (!character) return warriorImg;
+        switch(character.characterClass) {
+            case "Warrior": return warriorImg;
+            case "Mage":    return mageImg;
+            case "Rogue":   return rogueImg;
+            default:        return warriorImg;
         }
     };
 
     const getMonsterImage = () => {
-
-        switch(selectedMonster){
-
-            case "Goblin":
-                return goblinImg;
-
-            case "Skeleton":
-                return skeletonImg;
-
-            case "Orc":
-                return orcImg;
-
-            case "Dragon":
-                return dragonImg;
-
-            default:
-                return goblinImg;
+        switch(selectedMonster) {
+            case "Goblin":   return goblinImg;
+            case "Skeleton": return skeletonImg;
+            case "Orc":      return orcImg;
+            case "Dragon":   return dragonImg;
+            default:         return goblinImg;
         }
     };
 
+    const getLogColor = (entry) => {
+        if (entry.includes("Victory"))  return "#60c060";
+        if (entry.includes("defeated")) return "#60c060";
+        if (entry.includes("Level Up")) return "#ffd700";
+        if (entry.includes("attacked")) return "#e06060";
+        return "#c8b890";
+    };
 
+    const itemIcon = (t) => t === "WEAPON" ? "⚔️" : t === "ARMOR" ? "🛡️" : "🧪";
+    const playerPct  = maxPlayerHealth  > 0 ? (playerHealth  / maxPlayerHealth)  * 100 : 100;
+    const monsterPct = maxMonsterHealth > 0 ? (monsterHealth / maxMonsterHealth) * 100 : 100;
+
+    const potionItem = inventory.find(i => i.itemName === "Health Potion" && i.quantity > 0);
 
     return (
-        <div
-            style={{
-                backgroundImage: `url(${backgroundImg})`,
-                backgroundSize: "cover",
-                backgroundPosition: "center",
-                backgroundAttachment: "fixed",
-                minHeight: "100vh"
-            }}
-        >
-            <div
-                style={{
-                backgroundColor: "rgba(0,0,0,0.65)",
-                minHeight: "100vh"
-            }}
-            >
-                <div
-                    style={{
-                        textAlign: "center",
-                        margin: "0 auto",
-                        maxWidth: "1200px",
-                        color: "white",
-                        padding: "20px"
-                    }}
-                >
+        <div className="b-root" style={{
+            backgroundImage: `url(${backgroundImg})`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundAttachment: "fixed",
+            minHeight: "100vh"
+        }}>
+            <div style={{ backgroundColor: "rgba(0,0,0,0.70)", minHeight: "100vh" }}>
+                <div style={{ maxWidth: "1680px", width: "100%", margin: "0 auto", padding: "16px" }}>
 
-                    {character && (
+                    <div className="b-layout">
 
-                        <div
-                            style={cardStyle}
-                        >
+                        {/* ══ LEFT PANEL ══ */}
+                        <div className="b-left">
 
-                            <h2>⚔️ {character.name}</h2>
+                            {character && (
+                                <div className="b-card">
+                                    <img src={getCharacterImage()} alt="hero" className="b-portrait" />
+                                    <p className="b-cname">{character.characterClass.toUpperCase()}</p>
+                                    <p className="b-csub">✕ {character.name}</p>
+                                    <hr className="b-hdiv" />
+                                    <div className="b-srow"><span className="b-slabel">Class</span><span className="b-sval">{character.characterClass}</span></div>
+                                    <div className="b-srow"><span className="b-slabel">Level</span><span className="b-sval">{character.level}</span></div>
+                                    <div className="b-srow"><span className="b-slabel">XP</span><span className="b-sval">{character.xp}</span></div>
+                                    <div className="b-srow"><span className="b-slabel">Attack</span><span className="b-sval">{character.attack}</span></div>
+                                    <div className="b-srow"><span className="b-slabel">Defense</span><span className="b-sval">{character.defense}</span></div>
+                                    <hr className="b-hdiv" />
+                                    <div className="b-srow"><span className="b-slabel">⚔️ Weapon</span><span className="b-sval" style={{ fontSize: "11px" }}>{character.equippedWeapon || "None"}</span></div>
+                                    <div className="b-srow"><span className="b-slabel">🛡️ Armor</span><span className="b-sval" style={{ fontSize: "11px" }}>{character.equippedArmor || "None"}</span></div>
+                                    <div className="b-srow"><span className="b-slabel">❤️ Health</span><span className="b-sval hp">{character.currentHealth}/{character.maxHealth}</span></div>
+                                </div>
+                            )}
 
-                            <p>Class: {character.characterClass}</p>
-
-                            <p>Level: {character.level}</p>
-
-                            <p>XP: {character.xp}</p>
-
-                            <p>Attack: {character.attack}</p>
-
-                            <p>Defense: {character.defense}</p>
-
-                            <p>
-                                ⚔️ Equipped Weapon:
-                                {" "}
-                                {character.equippedWeapon}
-                            </p>
-
-                            <p>
-                                🛡️ Equipped Armor:
-                                {" "}
-                                {character.equippedArmor}
-                            </p>
-
-                            <p>
-                                Health:
-                                {" "}
-                                {character.currentHealth}
-                                /
-                                {character.maxHealth}
-                            </p>
-
+                            <div className="b-card">
+                                <div className="b-ph"><span>🎒</span><h2>Inventory</h2></div>
+                                <div className="b-inv-container">
+                                    {potionItem && (
+                                        <div className="b-potion-row">
+                                            <button className="b-potion-btn" onClick={handleUsePotion}>🧪 Use Potion</button>
+                                        </div>
+                                    )}
+                                    {inventory.map((item, idx) => (
+                                        <div key={idx} className="b-irow">
+                                            <span className="b-ileft">
+                                                {itemIcon(item.itemType)} {item.itemName}
+                                                <span className="b-iqty">x{item.quantity}</span>
+                                            </span>
+                                            {(item.itemType === "WEAPON" || item.itemType === "ARMOR") && (
+                                                <button className="b-equip" onClick={() => handleEquipItem(item.itemId)}>Equip</button>
+                                            )}
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                         </div>
-                    )}
-                    <div
-                        style={{
-                            border: "1px solid gray",
-                            padding: "15px",
-                            marginBottom: "20px"
-                        }}
-                    >
 
-                        <h2>🎒 Inventory</h2>
-                        {inventory.some(
-                            item =>
-                                item.itemName === "Health Potion"
-                                && item.quantity > 0
-                        ) && (
-                            <button onClick={handleUsePotion}>
-                                Use Potion 🧪
-                            </button>
-                        )}
+                        {/* ══ CENTER PANEL ══ */}
+                        <div className="b-center">
 
-                        {inventory.map((item, index) => (
+                            <div className="b-card">
+                                <h1 className="b-title">
+                                    <span className="b-tswords">✕ </span>Battle Arena<span className="b-tswords"> ✕</span>
+                                </h1>
+                                <div className="b-tdiv" />
 
-                            <div
-                                key={index}
-                                style={{
-                                    display: "flex",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    gap: "10px",
-                                    marginBottom: "10px"
-                                }}
-                            >
-                                <span>
-                                    {item.itemType === "WEAPON" && "⚔️"}
-                                    {item.itemType === "ARMOR" && "🛡️"}
-                                    {item.itemType === "POTION" && "🧪"}
+                                <div className="b-controls">
+                                    <select className="b-mselect" value={selectedMonster} onChange={e => setSelectedMonster(e.target.value)}>
+                                        <option value="Goblin">Goblin</option>
+                                        <option value="Skeleton">Skeleton</option>
+                                        <option value="Orc">Orc</option>
+                                        <option value="Dragon">Dragon</option>
+                                    </select>
+                                    <button className="b-startbtn" onClick={handleStartBattle}>Start Battle ✕</button>
+                                </div>
 
-                                    {" "}
-                                    {item.itemName}
-                                    {" "}
-                                    x{item.quantity}
-                                </span>
+                                <div className="b-combatants">
 
-                                {(item.itemType === "WEAPON" ||
-                                item.itemType === "ARMOR") && (
+                                    {/* Player */}
+                                    <div className="b-fighter player">
+                                        <img src={getCharacterImage()} alt="player" className="b-fimg" />
+                                        <div className="b-finfo">
+                                            <p className="b-fclass">{character?.characterClass?.toUpperCase() || "WARRIOR"}</p>
+                                            <p className="b-fname">{character?.name}</p>
+                                        </div>
+                                        <div className="b-hpwrap">
+                                            <div className="b-hptrack">
+                                                <div className="b-hpfill" style={{ width: `${playerPct}%` }} />
+                                            </div>
+                                        </div>
+                                        {battleId && <p className="b-hptext">{playerHealth} / {maxPlayerHealth}</p>}
+                                    </div>
 
-                                    <button
-                                        onClick={() =>
-                                            handleEquipItem(item.itemId)
-                                        }
-                                    >
-                                        Equip
-                                    </button>
+                                    {/* Middle — VS / Attack / Victory */}
+                                    <div className="b-mid">
+                                        {!battleId && <div className="b-vs">VS</div>}
+                                        {battleId && !victory && (
+                                            <button className="b-attackbtn" onClick={handleAttack}>⚔ ATTACK ⚔</button>
+                                        )}
+                                        {victory && <div className="b-victory">🏆<br />VICTORY</div>}
+                                    </div>
 
-                                )}
+                                    {/* Monster */}
+                                    <div className="b-fighter monster">
+                                        <img src={getMonsterImage()} alt={selectedMonster} className="b-fimg" />
+                                        <div className="b-finfo">
+                                            <p className="b-fclass">{selectedMonster.toUpperCase()}</p>
+                                            <p className="b-fname">{selectedMonster}</p>
+                                        </div>
+                                        <div className="b-hpwrap">
+                                            <div className="b-hptrack">
+                                                <div className="b-hpfill" style={{ width: `${monsterPct}%`, background: "linear-gradient(to right,#5a0000,#991010)" }} />
+                                            </div>
+                                        </div>
+                                        {battleId && <p className="b-hptext">{monsterHealth} / {maxMonsterHealth}</p>}
+                                    </div>
+                                </div>
                             </div>
 
-                        ))}
-
-                    </div>
-                    <h1>⚔️ Battle Arena ⚔️</h1>
-                    <select
-                        style={{
-                            padding: "8px",
-                            borderRadius: "8px",
-                            backgroundColor: "#222",
-                            color: "white"
-                        }}
-                        value={selectedMonster}
-                        onChange={(e) =>
-                            setSelectedMonster(e.target.value)
-                        }
-                    >
-                        <option value="Goblin">Goblin</option>
-                        <option value="Skeleton">Skeleton</option>
-                        <option value="Orc">Orc</option>
-                        <option value="Dragon">Dragon</option>
-                    </select>
-
-                    <br />
-                    <br />
-                    <h3>
-                        Selected Monster:
-                        {" "}
-                        {selectedMonster}
-                    </h3>
-                    <button onClick={handleStartBattle}>
-                        Start Battle
-                    </button>
-
-                    <div
-                        style={{
-                            display: "flex",
-                            justifyContent: "center",
-                            gap: "100px",
-                            alignItems: "center",
-                            marginBottom: "20px"
-                        }}
-                    >
-                        <div>
-                            <img
-                                src={getCharacterImage()}
-                                style={{
-                                    width: "250px",
-                                    height: "250px",
-                                    objectFit: "contain",
-                                    borderRadius: "10px"
-                                }}
-                            />
-                            <h3>{character?.name}</h3>
-                            <progress
-                                value={playerHealth}
-                                max={maxPlayerHealth}
-                                style={{
-                                    width: "250px"
-                                }}
-                            />
-
-                            <p>
-                                {playerHealth} / {maxPlayerHealth}
-                            </p>
-                        </div>
-
-                        <h1>⚔️ VS ⚔️</h1>
-
-                        <div>
-                            <img
-                                src={getMonsterImage()}
-                                style={{
-                                    width: "250px",
-                                    height: "250px",
-                                    objectFit: "contain",
-                                    borderRadius: "10px"
-                                }}
-                            />
-                            <h3>{selectedMonster}</h3>
-                            <progress
-                            value={monsterHealth}
-                            max={maxMonsterHealth}
-                            style={{
-                                width: "250px"
-                            }}
-                        />
-
-                        <p>
-                            {monsterHealth} / {maxMonsterHealth}
-                        </p>
-                        </div>
-                    </div>
-                
-
-                    <h3>{message}</h3>
-                    <h2>📜 Battle Log</h2>
-
-                    <div
-                        style={{
-                            border: "1px solid gray",
-                            padding: "10px",
-                            height: "200px",
-                            width: "500px",
-                            margin: "10px auto",
-                            overflowY: "auto",
-                            textAlign: "left"
-                        }}
-                    >
-                        {battleLog.map((entry, index) => (
-                            <div
-                                key={index}
-                                style={{
-                                    marginBottom: "8px"
-                                }}
-                            >
-                                {entry}
+                            {/* Battle Log */}
+                            <div className="b-card">
+                                <div className="b-ph"><span>📜</span><h2>Battle Log</h2></div>
+                                <div className="b-logscroll">
+                                    {battleLog.map((entry, i) => (
+                                        <div key={i} className="b-logentry" style={{ color: getLogColor(entry) }}>{entry}</div>
+                                    ))}
+                                </div>
                             </div>
-                        ))}
-                    </div>
+                        </div>
 
-                    {battleId && !victory && (
-                        <button onClick={handleAttack}>
-                            Attack ⚔️
-                        </button>
-                    )}
+                        {/* ══ RIGHT PANEL ══ */}
+                        <div className="b-right">
+                            <div className="b-card">
+                                <div className="b-ph"><span>📊</span><h2>Quick Info</h2></div>
+                                <div className="b-qrow"><span className="b-qlabel">❤️ HP</span><span className="b-qval">{character?.currentHealth}/{character?.maxHealth}</span></div>
+                                <div className="b-qrow"><span className="b-qlabel">⚔️ ATK</span><span className="b-qval">{character?.attack}</span></div>
+                                <div className="b-qrow"><span className="b-qlabel">🛡️ DEF</span><span className="b-qval">{character?.defense}</span></div>
+                                <div className="b-qrow"><span className="b-qlabel b">🧪 Potions</span><span className="b-qval">{inventory.filter(i => i.itemType === "POTION").reduce((a, i) => a + i.quantity, 0)}</span></div>
+                                <div className="b-qrow"><span className="b-qlabel">🎒 Items</span><span className="b-qval">{inventory.length}</span></div>
+                                <div className="b-qrow"><span className="b-qlabel">👹 Monster</span><span className="b-qval">{selectedMonster}</span></div>
+                                <div className="b-qrow"><span className="b-qlabel p">🏆 Status</span><span className="b-qval">{victory ? "Victory" : "Ready"}</span></div>
+                                <div className="b-skull">💀</div>
+                            </div>
+                        </div>
+
+                    </div>
                 </div>
             </div>
         </div>
