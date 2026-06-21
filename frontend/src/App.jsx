@@ -46,7 +46,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Login />} />
         <Route path="/register" element={<Register />} />
-        <Route path="/create-character" element={<CreateCharacter />} />
+        <Route path="/create-character" element={
+          <ProtectedRoute>
+            <CreateCharacter />
+          </ProtectedRoute>
+          } />
 
         <Route
           path="/dashboard"
@@ -57,7 +61,13 @@ function App() {
           }
         />
 
-        <Route path="/battle" element={<Battle />} />
+        <Route 
+          path="/battle" 
+          element={
+            <ProtectedRoute>
+              <Battle />
+            </ProtectedRoute>
+          } />
       </Routes>
     </BrowserRouter>
   );

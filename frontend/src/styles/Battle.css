@@ -1,0 +1,642 @@
+@import url('https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@400;500;600;700&display=swap');
+
+/* ─── ROOT ─────────────────────────────────────────────────── */
+
+.b-root {
+    box-sizing: border-box;
+    font-family: 'Lora', serif;
+    overflow-x: hidden;
+}
+
+.b-root *,
+.b-root *::before,
+.b-root *::after {
+    box-sizing: border-box;
+}
+
+/* ─── LAYOUT ───────────────────────────────────────────────── */
+
+.b-layout {
+    display: grid;
+    grid-template-columns: 270px minmax(0, 1fr) 230px;
+    gap: 14px;
+    align-items: start;
+    width: 100%;
+}
+
+.b-left {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+}
+
+.b-center {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+}
+
+.b-right {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+}
+
+/* ─── CARD ─────────────────────────────────────────────────── */
+
+.b-card {
+    background: linear-gradient(160deg, rgba(10,6,2,0.94), rgba(18,11,4,0.97));
+    border: 1.5px solid rgba(180,140,40,0.5);
+    border-radius: 7px;
+    padding: 16px;
+    color: #e8d5a3;
+    backdrop-filter: blur(8px);
+    position: relative;
+    box-shadow: 0 6px 28px rgba(0,0,0,0.75), inset 0 1px 0 rgba(255,215,0,0.05);
+    min-width: 0;
+}
+
+.b-card::before,
+.b-card::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-color: rgba(200,160,50,0.6);
+    border-style: solid;
+    pointer-events: none;
+}
+
+.b-card::before {
+    top: 5px;
+    left: 5px;
+    border-width: 2px 0 0 2px;
+    border-radius: 2px 0 0 0;
+}
+
+.b-card::after {
+    bottom: 5px;
+    right: 5px;
+    border-width: 0 2px 2px 0;
+    border-radius: 0 0 2px 0;
+}
+
+/* ─── PANEL HEADER ─────────────────────────────────────────── */
+
+.b-ph {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 13px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(180,130,40,0.28);
+}
+
+.b-ph h2 {
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #c8a832;
+    margin: 0;
+    text-transform: uppercase;
+}
+
+/* ─── CHARACTER ────────────────────────────────────────────── */
+
+.b-portrait {
+    width: 100%;
+    height: 185px;
+    object-fit: cover;
+    object-position: top center;
+    border-radius: 4px;
+    border: 1px solid rgba(180,130,40,0.35);
+    margin-bottom: 11px;
+    display: block;
+}
+
+.b-cname {
+    font-family: 'Poppins', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    color: #f0e0a0;
+    text-align: center;
+    margin: 0 0 3px;
+    letter-spacing: 0.05em;
+}
+
+.b-csub {
+    font-family: 'Lora', serif;
+    font-size: 13px;
+    color: #c8a832;
+    text-align: center;
+    font-style: italic;
+    margin: 0 0 10px;
+}
+
+.b-hdiv {
+    border: none;
+    border-top: 1px solid rgba(180,130,40,0.22);
+    margin: 9px 0;
+}
+
+.b-srow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 0;
+    font-size: 13px;
+    font-weight: 500;
+    gap: 8px;
+}
+
+.b-slabel {
+    color: #b09060;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.b-sval {
+    color: #f0e0a0;
+    font-weight: 600;
+    text-align: right;
+    word-break: break-word;
+}
+
+.b-sval.hp {
+    color: #ff6b6b;
+    font-weight: 700;
+}
+
+/* ─── INVENTORY ────────────────────────────────────────────── */
+
+.b-inv-container {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.b-irow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(180,130,40,0.1);
+    font-size: 13px;
+    gap: 6px;
+    font-weight: 500;
+}
+
+.b-irow:last-child { border-bottom: none; }
+
+.b-ileft {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    color: #d4b87a;
+    flex: 1;
+    min-width: 0;
+    font-weight: 500;
+    flex-wrap: wrap;
+}
+
+.b-iqty {
+    color: #8a7050;
+    font-size: 12px;
+    white-space: nowrap;
+    font-weight: 400;
+}
+
+.b-equip {
+    background: transparent;
+    border: 1px solid rgba(180,130,40,0.4);
+    color: #c8a832;
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.b-equip:hover {
+    background: rgba(180,130,40,0.18);
+    color: #f0e0a0;
+}
+
+.b-use {
+    background: transparent;
+    border: 1px solid rgba(200,60,60,0.45);
+    color: #e08888;
+    font-family: 'Poppins', sans-serif;
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    padding: 4px 10px;
+    border-radius: 3px;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: background 0.15s, color 0.15s;
+    flex-shrink: 0;
+    text-transform: uppercase;
+}
+
+.b-use:hover {
+    background: rgba(200,60,60,0.2);
+    color: #ffb0b0;
+}
+
+/* ─── ARENA TITLE ──────────────────────────────────────────── */
+
+.b-title {
+    font-family: 'Poppins', sans-serif;
+    font-size: 24px;
+    font-weight: 700;
+    color: #c8a832;
+    text-align: center;
+    margin: 0 0 6px;
+    letter-spacing: 0.08em;
+    text-shadow: 0 0 18px rgba(200,168,50,0.35), 0 2px 4px rgba(0,0,0,0.8);
+}
+
+.b-tswords {
+    color: #7a6020;
+    font-weight: 700;
+}
+
+.b-tdiv {
+    width: 55%;
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(180,130,40,0.55), transparent);
+    margin: 6px auto 16px;
+}
+
+/* ─── BATTLE CONTROLS ──────────────────────────────────────── */
+
+.b-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 11px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+}
+
+.b-mselect {
+    background: rgba(8,5,2,0.9);
+    border: 1px solid rgba(180,130,40,0.5);
+    color: #e8d5a3;
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    padding: 8px 26px 8px 11px;
+    border-radius: 4px;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    min-width: 150px;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='9' height='5'%3E%3Cpath d='M0 0l4.5 5 4.5-5z' fill='%23c8a832'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 9px center;
+}
+
+.b-mselect option { background: #180f04; }
+
+.b-startbtn {
+    background: linear-gradient(to bottom, #7a1515, #400a0a);
+    border: 1px solid rgba(200,60,50,0.5);
+    color: #f0c0a0;
+    font-family: 'Poppins', sans-serif;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    padding: 8px 18px;
+    border-radius: 4px;
+    cursor: pointer;
+    text-transform: uppercase;
+    transition: all 0.18s;
+    box-shadow: 0 2px 10px rgba(140,20,20,0.3);
+    white-space: nowrap;
+}
+
+.b-startbtn:hover {
+    background: linear-gradient(to bottom, #9a1c1c, #550c0c);
+    box-shadow: 0 0 16px rgba(200,40,30,0.45);
+    transform: translateY(-1px);
+}
+
+/* ─── COMBATANTS ───────────────────────────────────────────── */
+/* Flexible by default: cards shrink/grow instead of being rigid */
+
+.b-combatants {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-end;
+    flex-wrap: nowrap;
+    gap: 10px;
+    width: 100%;
+}
+
+.b-fighter {
+    background: linear-gradient(175deg, rgba(12,8,4,0.93), rgba(6,4,2,0.97));
+    border: 1px solid rgba(150,110,35,0.45);
+    border-radius: 6px;
+    overflow: hidden;
+    width: 100%;
+    max-width: 195px;
+    min-width: 0;
+    flex: 1 1 130px;
+    box-shadow: 0 0 0 1px rgba(50,35,8,0.4), 0 8px 28px rgba(0,0,0,0.65);
+}
+
+.b-fighter.player  { border-color: rgba(170,130,45,0.55); }
+.b-fighter.monster { border-color: rgba(150,45,45,0.55); }
+
+.b-fimg {
+    width: 100%;
+    height: clamp(110px, 24vw, 185px);
+    object-fit: cover;
+    object-position: top center;
+    display: block;
+}
+
+.b-finfo {
+    padding: 8px 10px 4px;
+    text-align: center;
+}
+
+.b-fclass {
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(11px, 2.4vw, 13px);
+    font-weight: 700;
+    color: #f0e0a0;
+    margin: 0 0 3px;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.b-fname {
+    font-family: 'Lora', serif;
+    font-size: clamp(10px, 2vw, 12px);
+    color: #907050;
+    margin: 0 0 7px;
+    font-style: italic;
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.b-hpwrap { padding: 0 10px 3px; }
+
+.b-hptrack {
+    width: 100%;
+    height: 9px;
+    background: rgba(30,15,8,0.8);
+    border-radius: 5px;
+    overflow: hidden;
+    border: 1px solid rgba(80,40,15,0.5);
+}
+
+.b-hpfill {
+    height: 100%;
+    border-radius: 4px;
+    background: linear-gradient(to right, #7a0000, #bb1f1f);
+    transition: width 0.4s ease;
+}
+
+.b-hptext {
+    font-family: 'Lora', serif;
+    font-size: clamp(10px, 2vw, 12px);
+    color: #907050;
+    text-align: center;
+    padding: 4px 0 7px;
+    font-weight: 600;
+}
+
+/* ─── MIDDLE (VS / ATTACK / VICTORY) ──────────────────────── */
+
+.b-mid {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 auto;
+    padding-bottom: 45px;
+}
+
+.b-vs {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    border: 2px solid rgba(200,168,50,0.7);
+    background: radial-gradient(circle, rgba(25,16,5,0.97), rgba(8,5,2,0.99));
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: #c8a832;
+    box-shadow: 0 0 12px rgba(200,168,50,0.2), inset 0 0 8px rgba(200,168,50,0.06);
+    letter-spacing: 0.05em;
+    flex-shrink: 0;
+}
+
+.b-attackbtn {
+    background: linear-gradient(to bottom, #880e0e, #4a0606);
+    color: #f0c8a0;
+    border: 1.5px solid rgba(220,80,55,0.55);
+    border-radius: 5px;
+    padding: 9px 14px;
+    font-family: 'Poppins', sans-serif;
+    font-size: clamp(10px, 2.2vw, 13px);
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 0 18px rgba(190,40,20,0.35);
+    transition: all 0.18s ease;
+    white-space: nowrap;
+}
+
+.b-attackbtn:hover {
+    background: linear-gradient(to bottom, #aa1515, #600808);
+    box-shadow: 0 0 28px rgba(220,55,25,0.55);
+    transform: scale(1.04) translateY(-1px);
+}
+
+.b-attackbtn:active { transform: scale(0.97); }
+
+.b-victory {
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    font-weight: 700;
+    color: #FFD700;
+    text-align: center;
+    text-shadow: 0 0 18px rgba(255,215,0,0.55);
+    animation: bvp 1.5s ease-in-out infinite;
+    letter-spacing: 0.05em;
+}
+
+@keyframes bvp {
+    0%, 100% { opacity: 1; text-shadow: 0 0 18px rgba(255,215,0,0.55); }
+    50%       { opacity: 0.8; text-shadow: 0 0 32px rgba(255,215,0,0.85); }
+}
+
+/* ─── BATTLE LOG ───────────────────────────────────────────── */
+
+.b-logscroll {
+    height: 155px;
+    overflow-y: auto;
+    padding-right: 4px;
+    font-size: 13px;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.b-logscroll::-webkit-scrollbar { width: 4px; }
+.b-logscroll::-webkit-scrollbar-track { background: rgba(15,9,4,0.5); border-radius: 3px; }
+.b-logscroll::-webkit-scrollbar-thumb { background: rgba(180,130,40,0.38); border-radius: 3px; }
+
+.b-logentry {
+    padding: 3px 0;
+    line-height: 1.6;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+}
+
+/* ─── QUICK INFO ───────────────────────────────────────────── */
+
+.b-qrow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 6px 0;
+    border-bottom: 1px solid rgba(180,130,40,0.1);
+    font-size: 13px;
+    font-weight: 500;
+    gap: 8px;
+}
+
+.b-qrow:last-child { border-bottom: none; }
+
+.b-qlabel {
+    color: #9a7848;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.b-qlabel.b { color: #6080cc; }
+.b-qlabel.p { color: #9060c0; }
+
+.b-qval {
+    color: #f0e0a0;
+    font-weight: 700;
+    text-align: right;
+}
+
+.b-skull {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 30px;
+    opacity: 0.4;
+}
+
+/* ══════════════════════════════════════════════════════════
+   RESPONSIVE BREAKPOINTS
+   ══════════════════════════════════════════════════════════ */
+
+/* Tablet & narrow desktop — stack the 3 columns into 1 */
+@media (max-width: 1024px) {
+    .b-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .b-left,
+    .b-center,
+    .b-right {
+        width: 100%;
+    }
+}
+
+/* Small tablet — combatants still side by side but tighter */
+@media (max-width: 640px) {
+    .b-combatants {
+        gap: 6px;
+    }
+
+    .b-fighter {
+        flex: 1 1 100px;
+        max-width: 160px;
+    }
+
+    .b-mid {
+        padding-bottom: 38px;
+    }
+
+    .b-vs {
+        width: 42px;
+        height: 42px;
+        font-size: 10px;
+    }
+
+    .b-attackbtn {
+        padding: 8px 10px;
+    }
+
+    .b-title {
+        font-size: 19px;
+    }
+}
+
+/* Phone — stack player / VS / monster vertically for full readability */
+@media (max-width: 460px) {
+    .b-combatants {
+        flex-direction: column;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .b-fighter {
+        width: 100%;
+        max-width: 260px;
+        flex: none;
+    }
+
+    .b-mid {
+        padding-bottom: 0;
+    }
+
+    .b-controls {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .b-mselect,
+    .b-startbtn {
+        width: 100%;
+        min-width: 0;
+    }
+}
+
+.b-logout{
+    width:100%;
+    padding:12px;
+    margin-top:20px;
+    background:#7a0000;
+    color:white;
+    border:1px solid gold;
+    border-radius:10px;
+    cursor:pointer;
+}

@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
 import { startBattle, attack } from "../api/battleApi";
-import { getCharacter } from "../api/characterApi";
+import { getMyCharacter } from "../api/characterApi";
 import { getInventory, usePotion, equipItem } from "../api/inventoryApi";
+import { useNavigate } from "react-router-dom";
 import warriorImg from "../assets/warrior.png";
 import mageImg from "../assets/mage.png";
 import rogueImg from "../assets/rogue.png";
@@ -23,18 +24,25 @@ function Battle() {
     const [victory, setVictory] = useState(false);
     const [character, setCharacter] = useState(null);
     const [inventory, setInventory] = useState([]);
-    const [selectedMonster, setSelectedMonster] = useState("Goblin");
+    const [selectedMonster, setSelectedMonster] = useState(localStorage.getItem("selectedMonster") || "Goblin");
+    const navigate = useNavigate();
 
-    useEffect(() => { loadCharacter(); loadInventory(); }, []);
+    useEffect(() => { loadCharacter();}, []);
 
     const loadCharacter = async () => {
-        try { const r = await getCharacter("ShadowHunter"); setCharacter(r.data); }
-        catch(e) { console.error(e); }
+        try { const r = await getMyCharacter(); 
+            setCharacter(r.data); 
+            const inventoryResponse = await getInventory(r.data.id);
+            setInventory(inventoryResponse.data);
+        }
+        catch(e){
+            navigate("/create-character");
+        }
     };
 
     const handleStartBattle = async () => {
         try {
-            const r = await startBattle({ characterName: "ShadowHunter", monsterName: selectedMonster });
+            const r = await startBattle({ characterName: character.name, monsterName: selectedMonster });
             setBattleId(r.data.battleId);
             setPlayerHealth(r.data.playerHealth);
             setMonsterHealth(r.data.monsterHealth);
@@ -54,32 +62,39 @@ function Battle() {
             setMessage(r.data.message);
             setBattleLog(prev => [...prev, r.data.message]);
             setVictory(r.data.victory);
-            if (r.data.victory) { loadCharacter(); loadInventory(); }
+            if (r.data.victory) { await loadCharacter(); }
         } catch(e) { console.error(e); }
     };
 
-    const loadInventory = async () => {
-        try { const r = await getInventory(1); setInventory(r.data); }
+    const loadInventory = async (charId) => {
+        try { const r = await getInventory(charId);
+            console.log("Inventory ID:", charId);
+            setInventory(r.data); }
         catch(e) { console.error(e); }
     };
 
     const handleUsePotion = async () => {
         try {
-            const r = await usePotion(1);
+            const r = await usePotion(character.id);
             setMessage(r.data.message);
             setBattleLog(prev => [...prev, r.data.message]);
-            loadCharacter(); loadInventory();
+            await loadCharacter();
         } catch(e) { console.error(e); }
     };
 
     const handleEquipItem = async (itemId) => {
         try {
-            const r = await equipItem(1, itemId);
+            const r = await equipItem(character.id, itemId);
             setMessage(r.data.message);
             setBattleLog(prev => [...prev, r.data.message]);
             loadCharacter();
         } catch(e) { console.error(e); }
     };
+
+    const handleLogout = () => {
+        localStorage.removeItem("token");
+        navigate("/");
+    }
 
     const getCharacterImage = () => {
         if (!character) return warriorImg;
@@ -112,8 +127,6 @@ function Battle() {
     const itemIcon = (t) => t === "WEAPON" ? "⚔️" : t === "ARMOR" ? "🛡️" : "🧪";
     const playerPct  = maxPlayerHealth  > 0 ? (playerHealth  / maxPlayerHealth)  * 100 : 100;
     const monsterPct = maxMonsterHealth > 0 ? (monsterHealth / maxMonsterHealth) * 100 : 100;
-
-    const potionItem = inventory.find(i => i.itemName === "Health Potion" && i.quantity > 0);
 
     return (
         <div className="b-root" style={{
@@ -152,11 +165,6 @@ function Battle() {
                             <div className="b-card">
                                 <div className="b-ph"><span>🎒</span><h2>Inventory</h2></div>
                                 <div className="b-inv-container">
-                                    {potionItem && (
-                                        <div className="b-potion-row">
-                                            <button className="b-potion-btn" onClick={handleUsePotion}>🧪 Use Potion</button>
-                                        </div>
-                                    )}
                                     {inventory.map((item, idx) => (
                                         <div key={idx} className="b-irow">
                                             <span className="b-ileft">
@@ -165,6 +173,9 @@ function Battle() {
                                             </span>
                                             {(item.itemType === "WEAPON" || item.itemType === "ARMOR") && (
                                                 <button className="b-equip" onClick={() => handleEquipItem(item.itemId)}>Equip</button>
+                                            )}
+                                            {item.itemType === "POTION" && item.itemName === "Health Potion" && item.quantity > 0 && (
+                                                <button className="b-use" onClick={handleUsePotion}>Use</button>
                                             )}
                                         </div>
                                     ))}
@@ -182,7 +193,14 @@ function Battle() {
                                 <div className="b-tdiv" />
 
                                 <div className="b-controls">
-                                    <select className="b-mselect" value={selectedMonster} onChange={e => setSelectedMonster(e.target.value)}>
+                                    <select
+                                        className="b-mselect"
+                                        value={selectedMonster}
+                                        onChange={e => {
+                                            setSelectedMonster(e.target.value);
+                                            localStorage.setItem("selectedMonster", e.target.value);
+                                        }}
+                                    >
                                         <option value="Goblin">Goblin</option>
                                         <option value="Skeleton">Skeleton</option>
                                         <option value="Orc">Orc</option>
@@ -257,6 +275,7 @@ function Battle() {
                                 <div className="b-qrow"><span className="b-qlabel">👹 Monster</span><span className="b-qval">{selectedMonster}</span></div>
                                 <div className="b-qrow"><span className="b-qlabel p">🏆 Status</span><span className="b-qval">{victory ? "Victory" : "Ready"}</span></div>
                                 <div className="b-skull">💀</div>
+                                <button className="b-logout" onClick={handleLogout}>Logout</button>
                             </div>
                         </div>
 

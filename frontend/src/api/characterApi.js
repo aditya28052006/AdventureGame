@@ -7,3 +7,10 @@ const API = axios.create({
 export const createCharacter = (data) => API.post("/create", data);
 
 export const getCharacter = (name) => API.get(`/${name}`);
+
+export const getMyCharacter = () =>
+    API.get("/me", {
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+    });

@@ -68,6 +68,7 @@ public class CharacterService {
         characterRepository.save(character);
 
         return new CharacterResponse(
+                character.getId(),
                 character.getName(),
                 character.getCharacterClass(),
                 character.getLevel(),
@@ -92,6 +93,7 @@ public class CharacterService {
                 .orElseThrow(()-> new RuntimeException("Character not found"));
 
         return new CharacterResponse(
+                character.getId(),
                 character.getName(),
                 character.getCharacterClass(),
                 character.getLevel(),
@@ -126,6 +128,7 @@ public class CharacterService {
                 .orElseThrow(() -> new RuntimeException("Character not found"));
 
         return new CharacterResponse(
+                character.getId(),
                 character.getName(),
                 character.getCharacterClass(),
                 character.getLevel(),

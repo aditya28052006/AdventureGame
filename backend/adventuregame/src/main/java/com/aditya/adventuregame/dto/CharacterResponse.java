@@ -9,6 +9,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class CharacterResponse {
+    private Long id;
     private String name;
     private String characterClass;
     private int level;

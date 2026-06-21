@@ -65,7 +65,7 @@ public class BattleService {
                 .orElseThrow(()-> new RuntimeException("Monster not found"));
 
         Battle battle=Battle.builder()
-                .playerHealth(character.getCurrentHealth())
+                .playerHealth(character.getMaxHealth())
                 .monsterHealth(monster.getHealth())
                 .finished(false)
                 .gameCharacter(character)
@@ -152,7 +152,7 @@ public class BattleService {
                         inventoryItem.getQuantity()+1
                 );
             }
-
+            character.setCurrentHealth(battle.getPlayerHealth());
             inventoryRepository.save(inventoryItem);
 
 
@@ -177,6 +177,8 @@ public class BattleService {
                 newPlayerHealth=0;
             }
             battle.setPlayerHealth(newPlayerHealth);
+            character.setCurrentHealth(newPlayerHealth);
+            characterRepository.save(character);
             if(newPlayerHealth==0){
                 battle.setFinished(true);
                 message="Defeat! "+monster.getName()+" defeated you!!";

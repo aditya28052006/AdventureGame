@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { registerUser } from "../api/authApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import backgroundImg from "../assets/background.png";
+import "../styles/Auth.css";
 
 function Register() {
     const [form, setForm] = useState({
@@ -13,8 +15,8 @@ function Register() {
 
     const handleChange = (e) => {
         setForm({
-        ...form,
-        [e.target.name]: e.target.value,
+            ...form,
+            [e.target.name]: e.target.value,
         });
     };
 
@@ -22,57 +24,82 @@ function Register() {
         e.preventDefault();
 
         try {
-        const res = await registerUser(form);
+            const res = await registerUser(form);
 
-        localStorage.setItem("token", res.data.token);
+            localStorage.setItem("token", res.data.token);
 
-        alert("Registration successful!");
-        navigate("/create-character");
+            alert("Registration successful!");
+            navigate("/create-character");
         } catch (err) {
-        console.error(err);
-        alert(err.response?.data?.message || "Registration failed");
-    }
+            console.error(err);
+            alert(err.response?.data?.message || "Registration failed");
+        }
     };
 
     return (
-        <div className="flex min-h-screen justify-center items-center bg-gray-900">
-        <form
-            onSubmit={handleSubmit}
-            className="bg-gray-700 p-8 rounded-lg shadow-lg w-96"
+        <div
+            className="a-root"
+            style={{ backgroundImage: `url(${backgroundImg})` }}
         >
-            <h1 className="text-white text-2xl mb-6 text-center">Register</h1>
+            <div className="a-overlay" />
+            <div className="a-content">
+                <div className="a-card">
+                    <div className="a-crest">📜</div>
 
-            <input
-            type="text"
-            name="name"
-            placeholder="Name"
-            onChange={handleChange}
-            className="w-full p-3 mb-4 rounded"
-            />
+                    <h1 className="a-title">
+                        <span className="a-tswords">✕ </span>
+                        Join the Quest
+                        <span className="a-tswords"> ✕</span>
+                    </h1>
+                    <p className="a-subtitle">Begin your legend</p>
+                    <div className="a-divider" />
 
-            <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            onChange={handleChange}
-            className="w-full p-3 mb-4 rounded"
-            />
+                    <form onSubmit={handleSubmit}>
+                        <div className="a-field">
+                            <label className="a-label">👤 Name</label>
+                            <input
+                                type="text"
+                                name="name"
+                                placeholder="Your name"
+                                onChange={handleChange}
+                                className="a-input"
+                            />
+                        </div>
 
-            <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={handleChange}
-            className="w-full p-3 mb-4 rounded"
-            />
+                        <div className="a-field">
+                            <label className="a-label">✉️ Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="your@email.com"
+                                onChange={handleChange}
+                                className="a-input"
+                            />
+                        </div>
 
-            <button
-            type="submit"
-            className="w-full bg-blue-500 text-white p-3 rounded"
-            >
-            Register
-            </button>
-        </form>
+                        <div className="a-field">
+                            <label className="a-label">🔒 Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="••••••••"
+                                onChange={handleChange}
+                                className="a-input"
+                            />
+                        </div>
+
+                        <button type="submit" className="a-submit">
+                            ⚔ Register ⚔
+                        </button>
+                    </form>
+
+                    <div className="a-footer">
+                        Already an adventurer? <Link to="/login">Login</Link>
+                    </div>
+
+                    <div className="a-skull">💀</div>
+                </div>
+            </div>
         </div>
     );
 }

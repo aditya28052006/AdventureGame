@@ -1,6 +1,8 @@
 import { useState } from "react";
 import { loginUser } from "../api/authApi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
+import backgroundImg from "../assets/background.png";
+import "../styles/Auth.css";
 
 function Login() {
     const [form, setForm] = useState({
@@ -12,8 +14,8 @@ function Login() {
 
     const handleChange = (e) => {
         setForm({
-        ...form,
-        [e.target.name]: e.target.value,
+            ...form,
+            [e.target.name]: e.target.value,
         });
     };
 
@@ -21,49 +23,71 @@ function Login() {
         e.preventDefault();
 
         try {
-        const res = await loginUser(form);
+            const res = await loginUser(form);
 
-        localStorage.setItem("token", res.data.token);
+            localStorage.setItem("token", res.data.token);
 
-        alert("Login successful!");
-        navigate("/create-character");
+            alert("Login successful!");
+            navigate("/battle");
         } catch (err) {
-        alert("Login failed");
-        console.error(err);
+            alert("Login failed");
+            console.error(err);
         }
     };
 
     return (
-        <div className="flex min-h-screen justify-center items-center bg-gray-900">
-        <form
-            onSubmit={handleSubmit}
-            className="bg-gray-800 p-8 rounded-lg shadow-lg w-96"
+        <div
+            className="a-root"
+            style={{ backgroundImage: `url(${backgroundImg})` }}
         >
-            <h1 className="text-white text-2xl mb-6 text-center">Login</h1>
+            <div className="a-overlay" />
+            <div className="a-content">
+                <div className="a-card">
+                    <div className="a-crest">🗝️</div>
 
-            <input
-            type="email"
-            name="email"
-            placeholder="Email"
-            onChange={handleChange}
-            className="w-full p-3 mb-4 rounded"
-            />
+                    <h1 className="a-title">
+                        <span className="a-tswords">✕ </span>
+                        Enter Realm
+                        <span className="a-tswords"> ✕</span>
+                    </h1>
+                    <p className="a-subtitle">Return, adventurer</p>
+                    <div className="a-divider" />
 
-            <input
-            type="password"
-            name="password"
-            placeholder="Password"
-            onChange={handleChange}
-            className="w-full p-3 mb-4 rounded"
-            />
+                    <form onSubmit={handleSubmit}>
+                        <div className="a-field">
+                            <label className="a-label">✉️ Email</label>
+                            <input
+                                type="email"
+                                name="email"
+                                placeholder="your@email.com"
+                                onChange={handleChange}
+                                className="a-input"
+                            />
+                        </div>
 
-            <button
-            type="submit"
-            className="w-full bg-green-500 text-white p-3 rounded"
-            >
-            Login
-            </button>
-        </form>
+                        <div className="a-field">
+                            <label className="a-label">🔒 Password</label>
+                            <input
+                                type="password"
+                                name="password"
+                                placeholder="••••••••"
+                                onChange={handleChange}
+                                className="a-input"
+                            />
+                        </div>
+
+                        <button type="submit" className="a-submit">
+                            ⚔ Login ⚔
+                        </button>
+                    </form>
+
+                    <div className="a-footer">
+                        New to the realm? <Link to="/register">Create an account</Link>
+                    </div>
+
+                    <div className="a-skull">💀</div>
+                </div>
+            </div>
         </div>
     );
 }
